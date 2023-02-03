@@ -160,6 +160,20 @@ func (m *metric{{ $name.Render }}) recordDataPoint(start pcommon.Timestamp, ts p
 	{{- range $metric.Attributes }}
 	{{- if eq (attributeInfo .).Type.Primitive "[]byte" }}
 	dp.Attributes().PutEmptyBytes("{{ attributeName . }}").FromRaw({{ .RenderUnexported }}AttributeValue)
+    {{- else if or
+        (eq (attributeInfo .).Type.Primitive "[]string")
+        (eq (attributeInfo .).Type.Primitive "[]int")
+        (eq (attributeInfo .).Type.Primitive "[]double")
+        (eq (attributeInfo .).Type.Primitive "[]bool")
+    }}
+	dp.Attributes().PutEmptySlice("{{ attributeName . }}").FromRaw({{ .RenderUnexported }}AttributeValue)
+    {{- else if or
+        (eq (attributeInfo .).Type.Primitive "map[string]string")
+        (eq (attributeInfo .).Type.Primitive "map[string]int")
+        (eq (attributeInfo .).Type.Primitive "map[string]double")
+        (eq (attributeInfo .).Type.Primitive "map[string]bool")
+    }}
+	dp.Attributes().PutEmptyMap("{{ attributeName . }}").FromRaw({{ .RenderUnexported }}AttributeValue)
 	{{- else }}
 	dp.Attributes().Put{{ (attributeInfo .).Type }}("{{ attributeName .}}", {{ .RenderUnexported }}AttributeValue)
 	{{- end }}
@@ -284,6 +298,20 @@ func With{{ $name.Render }}(val {{ $attr.Type.Primitive }}) ResourceMetricsOptio
 		if ras.{{ $name.Render }}.Enabled {
 			{{- if eq $attr.Type.Primitive "[]byte" }}
 			rm.Resource().Attributes().PutEmptyBytes("{{ attributeName $name}}").FromRaw(val)
+            {{- else if or
+                (eq $attr.Type.Primitive "[]string")
+                (eq $attr.Type.Primitive "[]int")
+                (eq $attr.Type.Primitive "[]double")
+                (eq $attr.Type.Primitive "[]bool")
+            }}
+			rm.Resource().Attributes().PutEmptySlice("{{ attributeName $name}}").FromRaw(val)
+            {{- else if or
+                (eq $attr.Type.Primitive "map[string]string")
+                (eq $attr.Type.Primitive "map[string]int")
+                (eq $attr.Type.Primitive "map[string]double")
+                (eq $attr.Type.Primitive "map[string]bool")
+            }}
+			rm.Resource().Attributes().PutEmptyMap("{{ attributeName $name}}").FromRaw(val)
 			{{- else }}
 			rm.Resource().Attributes().Put{{ $attr.Type }}("{{ attributeName $name}}", val)
 			{{- end }}
