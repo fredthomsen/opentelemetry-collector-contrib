@@ -152,10 +152,10 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.Equal(t, "red", attrVal.Str())
 					attrVal, ok = dp.Attributes().Get("slice_attr")
 					assert.True(t, ok)
-					assert.EqualValues(t, []any{"one", "two"}, attrVal.Slice())
+					assert.EqualValues(t, []any{"one", "two"}, attrVal.Slice().AsRaw())
 					attrVal, ok = dp.Attributes().Get("map_attr")
 					assert.True(t, ok)
-					assert.EqualValues(t, map[string]any{"onek": "onev", "twok": "twov"}, attrVal.Map())
+					assert.EqualValues(t, map[string]any{"onek": "onev", "twok": "twov"}, attrVal.Map().AsRaw())
 				case "default.metric.to_be_removed":
 					assert.False(t, validatedMetrics["default.metric.to_be_removed"], "Found a duplicate in the metrics slice: default.metric.to_be_removed")
 					validatedMetrics["default.metric.to_be_removed"] = true

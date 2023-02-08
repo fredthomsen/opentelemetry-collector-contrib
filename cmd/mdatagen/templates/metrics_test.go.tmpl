@@ -160,6 +160,8 @@ func TestMetricsBuilder(t *testing.T) {
 					assert.True(t, ok)
 					{{- if (attributeInfo $attr).Enum }}
 					assert.Equal(t, "{{ index (attributeInfo $attr).Enum 0 }}", attrVal.Str())
+                    {{- else if or (eq (attributeInfo $attr).Type.String "Slice") (eq (attributeInfo $attr).Type.String "Map")}}
+					assert.EqualValues(t, {{ (attributeInfo $attr).Type.TestValue }}, attrVal.{{ (attributeInfo $attr).Type }}().AsRaw())
 					{{- else }}
 					assert.EqualValues(t, {{ (attributeInfo $attr).Type.TestValue }}, attrVal.{{ (attributeInfo $attr).Type }}())
 					{{- end }}
