@@ -13,7 +13,7 @@ resource_attributes:
     # Optional: Whether the resource attribute is emitted by default.
     enabled: bool
     # Required: attribute value type.
-    type: <string|int|double|bool|bytes|[]string|map[string]string>
+    type: <string|int|double|bool|bytes|[]any|map[string]any>
 
 # Optional: map of attribute definitions with the key being the attribute name and value
 # being described below.
@@ -27,7 +27,7 @@ attributes:
     # Optional: array of attribute values if they are static values.
     enum:
     # Required: attribute value type.
-    type: <string|int|double|bool|bytes|[]string|map[string]string>
+    type: <string|int|double|bool|bytes|[]any|map[string]any>
 
 # Required: map of metric names with the key being the metric name and value
 # being described below.

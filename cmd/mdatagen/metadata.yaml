@@ -41,12 +41,12 @@ attributes:
     type: bool
 
   slice_attr:
-    description: Attribute with a slice of strings value.
-    type: "[]string"
+    description: Attribute with a slice value.
+    type: "[]any"
 
   map_attr:
-    description: Attribute with a map associating a string to a string value.
-    type: "map[string]string"
+    description: Attribute with a map value.
+    type: "map[string]any"
 
 metrics:
   default.metric:

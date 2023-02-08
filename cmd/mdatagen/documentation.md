@@ -29,8 +29,8 @@ The metric will be become optional soon.
 | string_attr | Attribute with any string value. | Any Str |
 | state | Integer attribute with overridden name. | Any Int |
 | enum_attr | Attribute with a known set of string values. | Str: ``red``, ``green``, ``blue`` |
-| slice_attr | Attribute with a slice of strings value. | Any Slice |
-| map_attr | Attribute with a map associating a string to a string value. | Any Map |
+| slice_attr | Attribute with a slice value. | Any Slice |
+| map_attr | Attribute with a map value. | Any Map |
 
 ### default.metric.to_be_removed
 

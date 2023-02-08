@@ -85,7 +85,20 @@ func Test_loadMetadata(t *testing.T) {
 						Type: ValueType{
 							ValueType: pcommon.ValueTypeBool,
 						},
-					}},
+					},
+					"slice_attr": {
+						Description: "Attribute with a slice value.",
+						Type: ValueType{
+							ValueType: pcommon.ValueTypeSlice,
+						},
+					},
+					"map_attr": {
+						Description: "Attribute with a map value.",
+						Type: ValueType{
+							ValueType: pcommon.ValueTypeMap,
+						},
+					},
+				},
 				Metrics: map[metricName]metric{
 					"default.metric": {
 						Enabled:               true,
@@ -100,7 +113,7 @@ func Test_loadMetadata(t *testing.T) {
 							Aggregated:      Aggregated{Aggregation: pmetric.AggregationTemporalityCumulative},
 							Mono:            Mono{Monotonic: true},
 						},
-						Attributes: []attributeName{"string_attr", "overridden_int_attr", "enum_attr"},
+						Attributes: []attributeName{"string_attr", "overridden_int_attr", "enum_attr", "slice_attr", "map_attr"},
 					},
 					"optional.metric": {
 						Enabled:     false,
