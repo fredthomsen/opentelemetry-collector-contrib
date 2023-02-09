@@ -21,6 +21,11 @@ resource_attributes:
     type: string
     enabled: false
 
+  slice.resource.attr:
+    description: Resource attribute with any string value.
+    type: "[]string"
+    enabled: true
+
 attributes:
   string_attr:
     description: Attribute with any string value.
@@ -42,11 +47,11 @@ attributes:
 
   slice_attr:
     description: Attribute with a slice value.
-    type: "[]any"
+    type: "[]string"
 
   map_attr:
     description: Attribute with a map value.
-    type: "map[string]any"
+    type: "map[string]string"
 
 metrics:
   default.metric:

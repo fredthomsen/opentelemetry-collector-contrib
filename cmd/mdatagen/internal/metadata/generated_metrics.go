@@ -75,6 +75,7 @@ func (ras *ResourceAttributeSettings) Unmarshal(parser *confmap.Conf) error {
 // ResourceAttributesSettings provides settings for testreceiver metrics.
 type ResourceAttributesSettings struct {
 	OptionalResourceAttr   ResourceAttributeSettings `mapstructure:"optional.resource.attr"`
+	SliceResourceAttr      ResourceAttributeSettings `mapstructure:"slice.resource.attr"`
 	StringEnumResourceAttr ResourceAttributeSettings `mapstructure:"string.enum.resource.attr"`
 	StringResourceAttr     ResourceAttributeSettings `mapstructure:"string.resource.attr"`
 }
@@ -83,6 +84,9 @@ func DefaultResourceAttributesSettings() ResourceAttributesSettings {
 	return ResourceAttributesSettings{
 		OptionalResourceAttr: ResourceAttributeSettings{
 			Enabled: false,
+		},
+		SliceResourceAttr: ResourceAttributeSettings{
+			Enabled: true,
 		},
 		StringEnumResourceAttr: ResourceAttributeSettings{
 			Enabled: true,
@@ -140,7 +144,7 @@ func (m *metricDefaultMetric) init() {
 	m.data.Sum().DataPoints().EnsureCapacity(m.capacity)
 }
 
-func (m *metricDefaultMetric) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, stringAttrAttributeValue string, overriddenIntAttrAttributeValue int64, enumAttrAttributeValue string, sliceAttrAttributeValue []any, mapAttrAttributeValue map[string]any) {
+func (m *metricDefaultMetric) recordDataPoint(start pcommon.Timestamp, ts pcommon.Timestamp, val int64, stringAttrAttributeValue string, overriddenIntAttrAttributeValue int64, enumAttrAttributeValue string, sliceAttrAttributeValue []string, mapAttrAttributeValue map[string]string) {
 	if !m.settings.Enabled {
 		return
 	}
@@ -361,6 +365,15 @@ func WithOptionalResourceAttr(val string) ResourceMetricsOption {
 	}
 }
 
+// WithSliceResourceAttr sets provided value as "slice.resource.attr" attribute for current resource.
+func WithSliceResourceAttr(val []string) ResourceMetricsOption {
+	return func(ras ResourceAttributesSettings, rm pmetric.ResourceMetrics) {
+		if ras.SliceResourceAttr.Enabled {
+			rm.Resource().Attributes().PutEmptySlice("slice.resource.attr").FromRaw(val)
+		}
+	}
+}
+
 // WithStringEnumResourceAttrOne sets "string.enum.resource.attr=one" attribute for current resource.
 func WithStringEnumResourceAttrOne(ras ResourceAttributesSettings, rm pmetric.ResourceMetrics) {
 	if ras.StringEnumResourceAttr.Enabled {
@@ -441,7 +454,7 @@ func (mb *MetricsBuilder) Emit(rmo ...ResourceMetricsOption) pmetric.Metrics {
 }
 
 // RecordDefaultMetricDataPoint adds a data point to default.metric metric.
-func (mb *MetricsBuilder) RecordDefaultMetricDataPoint(ts pcommon.Timestamp, val int64, stringAttrAttributeValue string, overriddenIntAttrAttributeValue int64, enumAttrAttributeValue AttributeEnumAttr, sliceAttrAttributeValue []any, mapAttrAttributeValue map[string]any) {
+func (mb *MetricsBuilder) RecordDefaultMetricDataPoint(ts pcommon.Timestamp, val int64, stringAttrAttributeValue string, overriddenIntAttrAttributeValue int64, enumAttrAttributeValue AttributeEnumAttr, sliceAttrAttributeValue []string, mapAttrAttributeValue map[string]string) {
 	mb.metricDefaultMetric.recordDataPoint(mb.startTime, ts, val, stringAttrAttributeValue, overriddenIntAttrAttributeValue, enumAttrAttributeValue.String(), sliceAttrAttributeValue, mapAttrAttributeValue)
 }
 

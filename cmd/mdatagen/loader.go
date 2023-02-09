@@ -65,9 +65,9 @@ func (mvt *ValueType) UnmarshalText(text []byte) error {
 		mvt.ValueType = pcommon.ValueTypeBool
 	case "bytes":
 		mvt.ValueType = pcommon.ValueTypeBytes
-	case "[]any":
+	case "[]string":
 		mvt.ValueType = pcommon.ValueTypeSlice
-	case "map[string]any":
+	case "map[string]string":
 		mvt.ValueType = pcommon.ValueTypeMap
 	default:
 		return fmt.Errorf("invalid type: %q", vtStr)
@@ -94,9 +94,9 @@ func (mvt ValueType) Primitive() string {
 	case pcommon.ValueTypeBytes:
 		return "[]byte"
 	case pcommon.ValueTypeSlice:
-		return "[]any"
+		return "[]string"
 	case pcommon.ValueTypeMap:
-		return "map[string]any"
+		return "map[string]string"
 	default:
 		return ""
 	}
@@ -113,9 +113,9 @@ func (mvt ValueType) TestValue() string {
 	case pcommon.ValueTypeBool:
 		return "true"
 	case pcommon.ValueTypeMap:
-		return `map[string]any{"onek": "onev", "twok": "twov"}`
+		return `map[string]string{"onek": "onev", "twok": "twov"}`
 	case pcommon.ValueTypeSlice:
-		return `[]any{"one", "two"}`
+		return `[]string{"one", "two"}`
 	}
 	return ""
 }

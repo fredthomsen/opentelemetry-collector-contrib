@@ -72,5 +72,6 @@ metrics:
 | Name | Description | Values | Enabled |
 | ---- | ----------- | ------ | ------- |
 | optional.resource.attr | Explicitly disabled ResourceAttribute. | Any Str | false |
+| slice.resource.attr | Resource attribute with any string value. | Any Slice | true |
 | string.enum.resource.attr | Resource attribute with a known set of string values. | Str: ``one``, ``two`` | true |
 | string.resource.attr | Resource attribute with any string value. | Any Str | true |
