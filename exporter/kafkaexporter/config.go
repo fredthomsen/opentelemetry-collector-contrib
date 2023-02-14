@@ -86,6 +86,9 @@ type Producer struct {
 	// broker request. Defaults to 0 for unlimited. Similar to
 	// `queue.buffering.max.messages` in the JVM producer.
 	FlushMaxMessages int `mapstructure:"flush_max_messages"`
+
+	// The Partitioner to use for topic
+	Partitioner sarama.Partitioner
 }
 
 // MetadataRetry defines retry configuration for Metadata.

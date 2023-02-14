@@ -17,6 +17,7 @@ package batchpersignal // import "github.com/open-telemetry/opentelemetry-collec
 import (
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/plog"
+	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.opentelemetry.io/collector/pdata/ptrace"
 )
 
@@ -112,4 +113,52 @@ func SplitLogs(batch plog.Logs) []plog.Logs {
 	}
 
 	return result
+}
+
+// SplitMetrics returns one pmetric.Metrics for each metric in the given plog.Logs input. Each of the resulting plog.Logs contains exactly one log.
+func SplitMetricsByOttl(batch pmetric.Metrics) []pmetric.Metrics {
+	var result []pmetric.Metrics
+
+	// NOTE: Use OTTL to grab attribute out of metric
+	//DataPointConditions []string `mapstructure:"datapoint"`
+	// https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/filterprocessor#ottl-examples
+	//"github.com/open-telemetry/opentelemetry-collector-contrib/pkg/ottl/contexts/ottldatapoint"
+	//"github.com/open-telemetry/opentelemetry-collector-contrib/pkg/ottl/contexts/ottlmetric"
+	//"github.com/open-telemetry/opentelemetry-collector-contrib/pkg/ottl/ottlfuncs"
+
+	for i := 0; i < batch.ResourceMetrics.Len(); i++ {
+		rm := batch.ResourceMetrics.At(i)
+
+		for j := 0; j < rm.ScopeMetrics.Len(); j++ {
+			sm := rm.ScopeMetrics.At(j)
+			scopeAttrs := scopeMetric.Scope().Attributes()
+			metrics := scopeMetric.Metrics()
+
+			for k := 0; k < metrics.Len(); k++ {
+				metric := metrics.At(k)
+
+				var dps pmetric.NumberDataPointSlice
+				if metric.Type() == pmetric.MetricTypeGauge {
+					dps = metric.Gauge().DataPoints()
+				} else if metric.Type() == pmetric.MetricTypeSum {
+					dps = metric.Sum().DataPoints()
+				} else if metric.Type() == pmetric.MetricTypeSummary {
+					dps = metric.Summary().DataPoints()
+				} else if metric.Type() == pmetric.MetricTypeHistrogram {
+					dps = metric.Summary().DataPoints()
+				} else if metric.Type() == pmetric.MetricTypeExpotentialHistrogram {
+
+				}
+
+				for l := 0; l < dps.Len(); l++ {
+					dp := dps.At(l)
+					attributes := dp.Attributes()
+					if 
+				}
+			}
+		}
+	}
+
+	return records
+
 }

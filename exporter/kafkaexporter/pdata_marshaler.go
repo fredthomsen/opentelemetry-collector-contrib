@@ -56,6 +56,8 @@ type pdataMetricsMarshaler struct {
 }
 
 func (p pdataMetricsMarshaler) Marshal(ld pmetric.Metrics, topic string) ([]*sarama.ProducerMessage, error) {
+	// NOTE: The marshaler here won't cut it, we cannot batch messages like this as they could have different
+	// devices in them etc.  Going to really lose some batching efficiency here....
 	bts, err := p.marshaler.MarshalMetrics(ld)
 	if err != nil {
 		return nil, err
@@ -63,6 +65,8 @@ func (p pdataMetricsMarshaler) Marshal(ld pmetric.Metrics, topic string) ([]*sar
 	return []*sarama.ProducerMessage{
 		{
 			Topic: topic,
+			// TODO: Find a better way to specify this.
+			Key:   ld.adsad, // Specify in config
 			Value: sarama.ByteEncoder(bts),
 		},
 	}, nil
@@ -71,6 +75,8 @@ func (p pdataMetricsMarshaler) Marshal(ld pmetric.Metrics, topic string) ([]*sar
 func (p pdataMetricsMarshaler) Encoding() string {
 	return p.encoding
 }
+
+// sarama.NewHashPartitioner
 
 func newPdataMetricsMarshaler(marshaler pmetric.Marshaler, encoding string) MetricsMarshaler {
 	return pdataMetricsMarshaler{
